@@ -42,6 +42,7 @@ export const Layout = ({ children }: LayoutProps) => {
                     </div>
                 </div>
             </nav>
+            
             <div className='mt-5'>
                 <div className='pt-3 pb-3' >
                     {children}

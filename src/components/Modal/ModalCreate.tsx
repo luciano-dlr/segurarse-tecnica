@@ -12,19 +12,23 @@ interface ModalCreateProps {
 
 export const ModalCreate = ({ getUserList }: ModalCreateProps) => {
 
-    const { handleSubmit, control, setValue, formState, trigger } = useForm<User>();
-    const [selectFile, setSelectFile] = useState<File>()
     const collectionRef = collection(db, "Users")
 
+    const { handleSubmit, control, setValue, formState, trigger } = useForm<User>();
+
+    const [selectFile, setSelectFile] = useState<File>()
+
+    //Crear usuario
     const onSubmit: SubmitHandler<User> = (user) => {
         if (selectFile) {
+            //subir La imagen a https://imgbb.com/
             imgbbUpload({
                 key: "d869f7ff1fa4bbf765758b304a4d8a10",
                 image: selectFile,
             })
                 .then(async (data) => {
-                    console.log("Image uploaded to ImgBB:", data.data.display_url);
 
+                    //Nuevos Valores
                     const newUser: User = {
                         name: user.name,
                         email: user.email,
@@ -33,7 +37,9 @@ export const ModalCreate = ({ getUserList }: ModalCreateProps) => {
                         role: user.role,
                         img: data.data.display_url
                     }
+                    //Agregar documento a firebase
                     await addDoc(collectionRef, newUser).then(() => {
+                        //get de todos los documentos 
                         getUserList()
                         toast("Usuario Creado")
                     })
@@ -215,7 +221,6 @@ export const ModalCreate = ({ getUserList }: ModalCreateProps) => {
                                                     field.onChange();
                                                     if (e.target.files && e.target.files.length > 0) {
                                                         const selected = e.target.files[0]
-                                                        console.log("entra el selected", selected)
                                                         setSelectFile(selected);
 
                                                     }

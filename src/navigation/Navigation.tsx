@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./ProtectedRoute"
 
 export const Navigation = () => {
     return (
+        //Rutas Declaradas 
         <Routes >
             <Route element={< Navigate to={"/loginScreen"} />} index />
             <Route path="/loginScreen" element={< LoginScreen />} />

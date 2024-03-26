@@ -23,6 +23,7 @@ export const ModalEdit = ({ getUserList }: ModalEditProps) => {
 
     const { handleSubmit, control, setValue, formState, trigger } = useForm<FormValues>();
 
+    //Valors submit del Formulario
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
 
         try {
@@ -49,6 +50,7 @@ export const ModalEdit = ({ getUserList }: ModalEditProps) => {
         }
     }
 
+    //Actualizar los valores y trigger para disparar la validacion
     useEffect(() => {
 
         selectedUser?.name ? setValue('nameEdit', selectedUser.name) : setValue('nameEdit', '');

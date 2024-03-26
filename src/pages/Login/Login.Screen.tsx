@@ -6,8 +6,7 @@ import { collection, getDocs, } from 'firebase/firestore'
 import { db } from "../../firebase/firebase";
 import { useAuthStore } from '../../zustand/authStorage';
 import { User } from '../../zustand/interface';
-import { ToastContainer, toast } from 'react-toastify';
-
+import {  toast } from 'react-toastify';
 
 type Inputs = {
   email: string
@@ -16,58 +15,54 @@ type Inputs = {
 
 export const LoginScreen = () => {
 
-
-  const collectionRef = collection(db, "Users")
-  const { setUser } = useAuthStore()
+  const { setUser } = useAuthStore();
   const navigate = useNavigate();
+
   const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>()
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-
     try {
-
+      const collectionRef = collection(db, "Users")
       const querySnapshot = await getDocs(collectionRef);
+      const userFound = querySnapshot.docs.find((doc) => {
 
-      querySnapshot.forEach((doc) => {
-        const userId = doc.id
         const user = doc.data();
-
         if (user.email === data.email && user.password === data.password) {
-          const userData: User = {
-            id: userId,
-            email: user.email,
-            img: user.img,
-            name: user.name,
-            password: user.password,
-            phone: user.phone,
-            role: user.role
-          }
-          setUser(userData)
-          navigate("/homeScreen");
+          return doc
+        }
+      })
+
+      if (userFound) {
+
+        const user = userFound.data()
+        const userData: User = {
+          id: userFound.id,
+          email: user.email,
+          img: user.img,
+          name: user.name,
+          password: user.password,
+          phone: user.phone,
+          role: user.role
         }
 
-      });
-      toast.error("Usuario o Contraseña Incorrecto")
-      console.log("Credenciales incorrectas");
+        setUser(userData)
+        navigate("/homeScreen");
+      }
+      else {
+        toast.error("Usuario o Contraseña Incorrecto")
+      }
 
     } catch (error) {
+      toast.error('Error al conectar al servidor')
       console.error("Error al verificar las credenciales:", error);
     }
+
   }
+
 
   return (
     <div className='d-flex justify-content-evenly vh-100 w-100 p-4 gap-5'>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"/>
+
       <div className="col-lg-6 d-flex justify-content-center align-items-center d-none d-sm-none d-md-none d-lg-flex"
         style={{ backgroundColor: 'rgba(63,132,255,0.71)', borderRadius: '25px' }}>
         <img src={LogoDraw} className='w-50 h-50 object-fit-contain' />
@@ -102,6 +97,3 @@ export const LoginScreen = () => {
     </div>
   )
 }
-
-
-

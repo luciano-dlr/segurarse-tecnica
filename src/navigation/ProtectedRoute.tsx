@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 export const ProtectedRoute = () => {
 
+  //Rutas Protegidas
   const { user } = useAuthStore()
 
   return (

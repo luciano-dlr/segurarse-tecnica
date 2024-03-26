@@ -6,39 +6,21 @@ import { DocumentData, collection, getDocs } from "firebase/firestore";
 import { User } from '../../zustand/interface';
 import { ModalEdit } from '../../components/Modal/ModalEdit';
 import { useUserStore } from '../../zustand/userStorage';
-import { ToastContainer } from 'react-toastify';
 import { ModalDelete } from '../../components/Modal/ModalDelete';
 import { ModalCreate } from '../../components/Modal/ModalCreate';
 import Plus from "../../assets/Plus.svg";
 import { useAuthStore } from '../../zustand/authStorage';
 
-
 export const HomeScreen = () => {
-
-
-
-
-  // eliminar y editar solo admin, agregar usuario tambien solo admin 
-
-
-
-  //Mejorar stetica del proyect
-
-  //validations de mail y telefono en formulario 
-
-
-  // hacer documentation 
-
-
-  //subir a github
 
   const [userList, setUserList] = useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const { selectedUser, setUser, cleanUser } = useUserStore()
+  const { selectedUser, setUser } = useUserStore()
+
   const { user } = useAuthStore()
 
-
+  //Obtener listado de usarios a firebase
   const getUsersList = async () => {
 
     const collectionRef = collection(db, "Users")
@@ -50,15 +32,14 @@ export const HomeScreen = () => {
         ...doc.data()
       }
     })
-
     setUserList(users)
-
   }
 
   const filteredUsers = userList.filter(
     (user) => user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  //llamado a renderizar
   useEffect(() => {
     getUsersList();
     setSearchTerm('');
@@ -67,7 +48,6 @@ export const HomeScreen = () => {
 
   return (
     <Layout >
-
       <div className="container">
         {
           user?.role === 'Admin' &&
@@ -117,7 +97,6 @@ export const HomeScreen = () => {
                 phone={user.phone}
                 role={user.role}
                 selectUser={setUser}
-                cleanUser={cleanUser}
               />
             ))
           }
@@ -125,20 +104,11 @@ export const HomeScreen = () => {
             <div className="text-center">Usuario no Existente</div>
           )}
           <ModalDelete getUserList={getUsersList} />
+
           <ModalEdit getUserList={getUsersList} />
+
           <ModalCreate getUserList={getUsersList} />
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
+
         </div>
       </div>
     </Layout>

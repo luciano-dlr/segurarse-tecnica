@@ -9,15 +9,15 @@ interface UserCardProps {
     role: string;
     email: string
     selectUser: (user: SelectedUser) => void;
-    cleanUser: () => void;
+    
 }
 
-export const UserCard = ({ name, img, phone, role, email, selectUser, id, cleanUser }: UserCardProps) => {
+export const UserCard = ({ name, img, phone, role, email, selectUser, id }: UserCardProps) => {
 
     const {user}= useAuthStore()
 
-    const handleClick = (id: string, name: string, email: string, phone: string) => {
-        cleanUser()
+    //Establecer en un estado el usuario seleccionado
+    const handleSelectUser= (id: string, name: string, email: string, phone: string) => {
         selectUser({ id, name, email, phone })
     }
 
@@ -41,14 +41,14 @@ export const UserCard = ({ name, img, phone, role, email, selectUser, id, cleanU
                             data-bs-toggle="modal"
                             data-bs-target="#ModalDelete"
                             data-bs-whatever="@mdo"
-                            onClick={() => handleClick(id, name, email, phone)}
+                            onClick={() => handleSelectUser(id, name, email, phone)}
                         >Borrar</button>
                         <button type="button"
                             className="btn btn-primary text-white"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
                             data-bs-whatever="@mdo"
-                            onClick={() => handleClick(id, name, email, phone)}
+                            onClick={() => handleSelectUser(id, name, email, phone)}
                         >Editar</button>
                     </div>
                     }
